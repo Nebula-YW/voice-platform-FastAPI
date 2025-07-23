@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fastapi-vercel-template"
+version = "0.1.0"
+description = "A FastAPI template ready for deployment on Vercel"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    #AI框架
+    "baml-py>=0.201.0",
+    # API框架
+    "fastapi==0.115.8",
+    # 数据类型校验
+    "pydantic==2.10.6",
+    # 环境变量
+    "python-dotenv==1.0.1",
+]
+
+[tool.setuptools]
+packages = ["api"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "asyncio: mark the test as an asyncio coroutine"
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.9.10",
+]
+
+[[tool.uv.index]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true

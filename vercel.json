@@ -1,0 +1,16 @@
+{
+  "functions": {
+    "api/**/*.py": {
+      "memory": 3009,
+      "maxDuration": 300
+    }
+  },
+  "buildCommand": "python3 -m pip install uv && python3 -m  uv pip install . --target /build && python3 -m uv run baml-cli generate --from ./baml_src",
+  "outputDirectory": "public",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/main"
+    }
+  ]
+}

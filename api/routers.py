@@ -1,15 +1,17 @@
-from fastapi import APIRouter, HTTPException, Query, Path
+from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 from typing import List
 import logging
+import edge_tts
+import io
 
 from .schemas import (
-    HealthResponse,
-    EchoRequest,
-    EchoResponse,
-    ItemCreate,
-    ItemResponse,
-    UserCreate,
-    UserResponse,
+    TTSSynthesizeRequest,
+    TTSSynthesizeResponse,
+    TTSVoice,
+    TTSVoicesResponse,
+    TTSVoiceSearchRequest,
+    TTSVoiceSearchResponse,
 )
 
 router = APIRouter()
@@ -18,154 +20,208 @@ router = APIRouter()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# In-memory storage for demo purposes
-items_db = []
-users_db = []
-next_item_id = 1
-next_user_id = 1
 
-
-@router.get("/health", response_model=HealthResponse)
-async def health_check():
-    """Health check endpoint"""
-    return HealthResponse()
-
-
-@router.post("/echo", response_model=EchoResponse)
-async def echo(request: EchoRequest):
-    """Echo endpoint that returns the sent message"""
-    logger.info(f"Echo request: {request.message}")
-    return EchoResponse(message=request.message)
-
-
-@router.get("/items", response_model=List[ItemResponse])
-async def get_items(
-    skip: int = Query(0, ge=0, description="Number of items to skip"),
-    limit: int = Query(10, ge=1, le=100, description="Number of items to return"),
-):
-    """Get all items with pagination"""
-    logger.info(f"Getting items with skip={skip}, limit={limit}")
-    return items_db[skip : skip + limit]
-
-
-@router.post("/items", response_model=ItemResponse, status_code=201)
-async def create_item(item: ItemCreate):
-    """Create a new item"""
-    global next_item_id
-
-    logger.info(f"Creating item: {item.name}")
-
-    new_item = ItemResponse(
-        id=next_item_id,
-        name=item.name,
-        description=item.description,
-        price=item.price,
-        tax=item.tax,
-    )
-
-    items_db.append(new_item)
-    next_item_id += 1
-
-    return new_item
-
-
-@router.get("/items/{item_id}", response_model=ItemResponse)
-async def get_item(item_id: int = Path(..., gt=0, description="The ID of the item")):
-    """Get a specific item by ID"""
-    logger.info(f"Getting item with ID: {item_id}")
-
-    for item in items_db:
-        if item.id == item_id:
-            return item
-
-    raise HTTPException(status_code=404, detail="Item not found")
-
-
-@router.put("/items/{item_id}", response_model=ItemResponse)
-async def update_item(
-    item_id: int = Path(..., gt=0, description="The ID of the item"),
-    item_update: ItemCreate = None,
-):
-    """Update an existing item"""
-    logger.info(f"Updating item with ID: {item_id}")
-
-    for i, item in enumerate(items_db):
-        if item.id == item_id:
-            updated_item = ItemResponse(
-                id=item_id,
-                name=item_update.name,
-                description=item_update.description,
-                price=item_update.price,
-                tax=item_update.tax,
-                created_at=item.created_at,
+# TTS endpoints
+@router.get("/tts/voices", response_model=TTSVoicesResponse)
+async def get_tts_voices():
+    """获取所有可用的TTS声音列表"""
+    try:
+        logger.info("Getting all available TTS voices")
+        
+        voices_manager = await edge_tts.VoicesManager.create()
+        all_voices = voices_manager.voices
+        
+        tts_voices = []
+        for voice in all_voices:
+            tts_voice = TTSVoice(
+                name=voice.get('Name', ''),
+                short_name=voice.get('ShortName', ''),
+                gender=voice.get('Gender', ''),
+                locale=voice.get('Locale', ''),
+                language=voice.get('Language', voice.get('Locale', '').split('-')[0] if voice.get('Locale') else ''),
+                display_name=voice.get('FriendlyName', ''),
+                local_name=voice.get('FriendlyName', '')
             )
-            items_db[i] = updated_item
-            return updated_item
-
-    raise HTTPException(status_code=404, detail="Item not found")
-
-
-@router.delete("/items/{item_id}")
-async def delete_item(item_id: int = Path(..., gt=0, description="The ID of the item")):
-    """Delete an item"""
-    logger.info(f"Deleting item with ID: {item_id}")
-
-    for i, item in enumerate(items_db):
-        if item.id == item_id:
-            items_db.pop(i)
-            return {"message": f"Item {item_id} deleted successfully"}
-
-    raise HTTPException(status_code=404, detail="Item not found")
+            tts_voices.append(tts_voice)
+        
+        return TTSVoicesResponse(
+            voices=tts_voices,
+            total_count=len(tts_voices)
+        )
+        
+    except Exception as e:
+        logger.error(f"Failed to get TTS voices: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get TTS voices: {str(e)}")
 
 
-@router.post("/users", response_model=UserResponse, status_code=201)
-async def create_user(user: UserCreate):
-    """Create a new user"""
-    global next_user_id
+@router.post("/tts/voices/search", response_model=TTSVoiceSearchResponse)
+async def search_tts_voices(search_request: TTSVoiceSearchRequest):
+    """按条件搜索TTS声音"""
+    try:
+        logger.info(f"Searching TTS voices with filters: {search_request.model_dump(exclude_none=True)}")
+        
+        voices_manager = await edge_tts.VoicesManager.create()
+        
+        # 构建搜索参数
+        search_params = {}
+        if search_request.language:
+            search_params['Language'] = search_request.language
+        if search_request.locale:
+            search_params['Locale'] = search_request.locale
+        if search_request.gender:
+            search_params['Gender'] = search_request.gender
+            
+        # 执行搜索
+        if search_params:
+            filtered_voices = voices_manager.find(**search_params)
+        else:
+            filtered_voices = voices_manager.voices
+            
+        # 应用数量限制
+        if search_request.limit:
+            filtered_voices = filtered_voices[:search_request.limit]
+        
+        tts_voices = []
+        for voice in filtered_voices:
+            tts_voice = TTSVoice(
+                name=voice.get('Name', ''),
+                short_name=voice.get('ShortName', ''),
+                gender=voice.get('Gender', ''),
+                locale=voice.get('Locale', ''),
+                language=voice.get('Language', voice.get('Locale', '').split('-')[0] if voice.get('Locale') else ''),
+                display_name=voice.get('FriendlyName', ''),
+                local_name=voice.get('FriendlyName', '')
+            )
+            tts_voices.append(tts_voice)
+        
+        return TTSVoiceSearchResponse(
+            voices=tts_voices,
+            total_count=len(voices_manager.voices),
+            filtered_count=len(tts_voices),
+            filters_applied=search_params
+        )
+        
+    except Exception as e:
+        logger.error(f"Failed to search TTS voices: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to search TTS voices: {str(e)}")
 
-    logger.info(f"Creating user: {user.username}")
 
-    # Check if username already exists
-    for existing_user in users_db:
-        if existing_user.username == user.username:
-            raise HTTPException(status_code=400, detail="Username already exists")
+@router.post("/tts/synthesize", response_model=TTSSynthesizeResponse)
+async def synthesize_speech_file(request: TTSSynthesizeRequest):
+    """将文本转换为语音并返回音频流"""
+    try:
+        logger.info(f"Synthesizing speech for text: {request.text[:50]}... with voice: {request.voice}")
+        
+        # 验证声音是否存在
+        voices_manager = await edge_tts.VoicesManager.create()
+        available_voices = [voice['Name'] for voice in voices_manager.voices]
+        
+        if request.voice not in available_voices:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Voice '{request.voice}' not found. Use /tts/voices to get available voices."
+            )
+        
+        # 创建Communicate对象
+        communicate_kwargs = {
+            'text': request.text,
+            'voice': request.voice
+        }
+        if request.rate:
+            communicate_kwargs['rate'] = request.rate
+        if request.volume:
+            communicate_kwargs['volume'] = request.volume
+        if request.pitch:
+            communicate_kwargs['pitch'] = request.pitch
+            
+        communicate = edge_tts.Communicate(**communicate_kwargs)
+        
+        # 收集音频数据
+        audio_data = b""
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                audio_data += chunk["data"]
+        
+        if not audio_data:
+            raise HTTPException(status_code=500, detail="Failed to generate audio data")
+        
+        # 返回参数信息
+        parameters = {
+            "text_length": len(request.text),
+            "voice": request.voice,
+            "rate": request.rate,
+            "volume": request.volume,  
+            "pitch": request.pitch
+        }
+        
+        return TTSSynthesizeResponse(
+            message="Speech synthesis completed successfully",
+            audio_size=len(audio_data),
+            voice_used=request.voice,
+            parameters=parameters
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to synthesize speech: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to synthesize speech: {str(e)}")
 
-    # Check if email already exists
-    for existing_user in users_db:
-        if existing_user.email == user.email:
-            raise HTTPException(status_code=400, detail="Email already exists")
 
-    new_user = UserResponse(
-        id=next_user_id,
-        username=user.username,
-        email=user.email,
-        full_name=user.full_name,
-        is_active=True,
-    )
-
-    users_db.append(new_user)
-    next_user_id += 1
-
-    return new_user
-
-
-@router.get("/users", response_model=List[UserResponse])
-async def get_users(
-    skip: int = Query(0, ge=0, description="Number of users to skip"),
-    limit: int = Query(10, ge=1, le=100, description="Number of users to return"),
-):
-    """Get all users with pagination"""
-    logger.info(f"Getting users with skip={skip}, limit={limit}")
-    return users_db[skip : skip + limit]
-
-
-@router.get("/users/{user_id}", response_model=UserResponse)
-async def get_user(user_id: int = Path(..., gt=0, description="The ID of the user")):
-    """Get a specific user by ID"""
-    logger.info(f"Getting user with ID: {user_id}")
-
-    for user in users_db:
-        if user.id == user_id:
-            return user
-
-    raise HTTPException(status_code=404, detail="User not found")
+@router.post("/tts/synthesize/stream")
+async def synthesize_speech_stream(request: TTSSynthesizeRequest):
+    """将文本转换为语音并返回音频流"""
+    try:
+        logger.info(f"Streaming speech synthesis for text: {request.text[:50]}... with voice: {request.voice}")
+        
+        # 验证声音是否存在
+        voices_manager = await edge_tts.VoicesManager.create()
+        available_voices = [voice['Name'] for voice in voices_manager.voices]
+        
+        if request.voice not in available_voices:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Voice '{request.voice}' not found. Use /tts/voices to get available voices."
+            )
+        
+        # 创建Communicate对象
+        communicate_kwargs = {
+            'text': request.text,
+            'voice': request.voice
+        }
+        if request.rate:
+            communicate_kwargs['rate'] = request.rate
+        if request.volume:
+            communicate_kwargs['volume'] = request.volume
+        if request.pitch:
+            communicate_kwargs['pitch'] = request.pitch
+            
+        communicate = edge_tts.Communicate(**communicate_kwargs)
+        
+        # 收集音频数据
+        audio_data = b""
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                audio_data += chunk["data"]
+        
+        if not audio_data:
+            raise HTTPException(status_code=500, detail="Failed to generate audio data")
+        
+        # 创建音频流
+        audio_stream = io.BytesIO(audio_data)
+        
+        # 返回流式响应
+        return StreamingResponse(
+            io.BytesIO(audio_data),
+            media_type="audio/mpeg",
+            headers={
+                "Content-Disposition": "attachment; filename=speech.mp3",
+                "Content-Length": str(len(audio_data))
+            }
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to synthesize speech stream: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to synthesize speech stream: {str(e)}")

@@ -1,10 +1,11 @@
-# FastAPI Vercel Template
+# FastAPI Vercel Template with Edge TTS
 
-A production-ready FastAPI template optimized for deployment on Vercel with serverless functions.
+A production-ready FastAPI template optimized for deployment on Vercel with serverless functions, featuring integrated Edge TTS (Text-to-Speech) capabilities.
 
 ## ✨ Features
 
 - **FastAPI** - Modern, fast web framework for building APIs
+- **Edge TTS Integration** - Microsoft Edge's online text-to-speech service
 - **Vercel Ready** - Optimized for Vercel serverless deployment
 - **Auto Documentation** - Interactive API docs with Swagger UI
 - **CORS Support** - Cross-origin resource sharing configured
@@ -82,6 +83,12 @@ fastapi-vercel-template/
 - `POST /api/v1/users` - Create a new user
 - `GET /api/v1/users/{user_id}` - Get user by ID
 
+### TTS (Text-to-Speech) API
+- `GET /api/v1/tts/voices` - Get all available TTS voices
+- `POST /api/v1/tts/voices/search` - Search voices by language, locale, or gender
+- `POST /api/v1/tts/synthesize` - Convert text to speech (returns metadata)
+- `POST /api/v1/tts/synthesize/stream` - Convert text to speech (returns audio stream)
+
 ## 📊 Example Usage
 
 ### Create an Item
@@ -106,6 +113,62 @@ curl -X POST "http://localhost:3000/api/v1/echo" \
 ### Health Check
 ```bash
 curl "http://localhost:3000/api/v1/health"
+```
+
+### TTS Examples
+
+#### Get Available Voices
+```bash
+curl "http://localhost:3000/api/v1/tts/voices"
+```
+
+#### Search Chinese Female Voices
+```bash
+curl -X POST "http://localhost:3000/api/v1/tts/voices/search" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "language": "zh",
+    "gender": "Female",
+    "limit": 5
+  }'
+```
+
+#### Generate Speech Metadata
+```bash
+curl -X POST "http://localhost:3000/api/v1/tts/synthesize" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "你好，欢迎使用Edge TTS服务！",
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "+20%",
+    "volume": "+0%"
+  }'
+```
+
+#### Download Speech Audio
+```bash
+curl -X POST "http://localhost:3000/api/v1/tts/synthesize/stream" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Hello, this is a test of the Edge TTS service!",
+    "voice": "en-US-AriaNeural",
+    "rate": "+0%"
+  }' \
+  --output speech.mp3
+```
+
+#### Generate Chinese Speech with Custom Parameters
+```bash
+curl -X POST "http://localhost:3000/api/v1/tts/synthesize/stream" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "这是一个中文语音合成的示例，演示如何调整语速和音调。",
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "+50%",
+    "volume": "+0%",
+    "pitch": "+100Hz"
+  }' \
+  --output chinese_speech.mp3
 ```
 
 ## 🧪 Testing
@@ -137,9 +200,12 @@ cp .env.example .env
 Edit the `.env` file with your configuration:
 ```env
 # Optional environment variables
-API_TITLE="FastAPI Vercel Template"
+API_TITLE="FastAPI Vercel Template with Edge TTS"
 API_VERSION="1.0.0"
 DEBUG=false
+
+# TTS configuration (Edge TTS doesn't require API keys)
+# All TTS functionality works out of the box without additional configuration
 ```
 
 ### CORS Configuration
@@ -156,6 +222,30 @@ app.add_middleware(
 ```
 
 ## 🔧 Customization
+
+### TTS Integration Features
+
+The Edge TTS integration provides:
+
+- **No API Key Required**: Uses Microsoft Edge's free online TTS service
+- **200+ Voices**: Support for multiple languages and dialects
+- **Voice Customization**: Adjust rate, volume, and pitch
+- **Streaming Audio**: Direct MP3 audio stream output
+- **Voice Search**: Filter voices by language, locale, and gender
+- **Async Support**: Full async/await support for high performance
+
+#### Popular Voice Examples
+```python
+# Chinese voices
+"zh-CN-XiaoxiaoNeural"  # Female, friendly
+"zh-CN-YunxiNeural"     # Male, casual
+"zh-CN-XiaoyiNeural"    # Female, cute
+
+# English voices  
+"en-US-AriaNeural"      # Female, natural
+"en-US-DavisNeural"     # Male, professional
+"en-GB-SoniaNeural"     # Female, British
+```
 
 ### Adding New Endpoints
 

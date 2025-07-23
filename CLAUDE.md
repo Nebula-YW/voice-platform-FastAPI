@@ -27,12 +27,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-This is a FastAPI application optimized for Vercel deployment with serverless functions.
+This is a FastAPI application optimized for Vercel deployment with serverless functions, featuring integrated Edge TTS (Text-to-Speech) capabilities.
 
 ### Project Structure
 - `api/main.py` - FastAPI app initialization, CORS middleware, and root endpoint
-- `api/routers.py` - All API route handlers (health, echo, items CRUD, users)
-- `api/schemas.py` - Pydantic models for request/response validation
+- `api/routers.py` - All API route handlers (health, echo, items CRUD, users, TTS)
+- `api/schemas.py` - Pydantic models for request/response validation (including TTS models)
 - `tests/` - Test suite using pytest and TestClient
 - `vercel.json` - Vercel serverless configuration
 - `pyproject.toml` - Project dependencies managed by UV
@@ -47,12 +47,14 @@ This is a FastAPI application optimized for Vercel deployment with serverless fu
 **Router System (`api/routers.py`):**
 - Single router handling all endpoints
 - In-memory storage for demo (items_db, users_db)
+- Edge TTS integration with voice management and speech synthesis
 - Structured logging throughout
 - Global ID counters for items and users
 
 **Data Models (`api/schemas.py`):**
 - Pydantic models with validation
 - Separate Create/Response models for proper API design
+- TTS-specific models (TTSSynthesizeRequest, TTSVoice, etc.)
 - Timestamp fields auto-generated
 
 ### API Endpoints Structure
@@ -61,6 +63,7 @@ This is a FastAPI application optimized for Vercel deployment with serverless fu
 - Echo: `/api/v1/echo`
 - Items: `/api/v1/items` (full CRUD)
 - Users: `/api/v1/users` (create, read, list)
+- TTS: `/api/v1/tts/voices`, `/api/v1/tts/voices/search`, `/api/v1/tts/synthesize`, `/api/v1/tts/synthesize/stream`
 
 ### Deployment Configuration
 - Vercel uses `requirements.txt` for deployment
@@ -71,4 +74,13 @@ This is a FastAPI application optimized for Vercel deployment with serverless fu
 ### Testing Strategy
 - Uses FastAPI TestClient for API testing
 - Comprehensive test coverage including validation, CRUD operations, and error cases
+- TTS endpoint testing with voice validation and parameter checking
 - Tests include pagination, duplicate handling, and complete workflows
+
+### TTS Integration Details
+- **Edge TTS Library**: Uses `edge-tts>=6.1.0` for Microsoft's TTS service
+- **No API Keys**: Works out-of-the-box without authentication
+- **Voice Management**: Async voice discovery and filtering
+- **Audio Streaming**: Direct MP3 stream responses
+- **Parameter Support**: Rate, volume, and pitch adjustments
+- **Error Handling**: Voice validation and comprehensive error responses

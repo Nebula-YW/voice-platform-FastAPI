@@ -1,72 +1,51 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 
-class HealthResponse(BaseModel):
-    status: str = "ok"
-    timestamp: datetime = Field(default_factory=datetime.now)
-    version: str = "1.0.0"
+# TTS相关模型
+class TTSSynthesizeRequest(BaseModel):
+    text: str = Field(..., min_length=1, max_length=5000, description="要转换为语音的文本")
+    voice: str = Field(..., description="声音名称，如：zh-CN-XiaoxiaoNeural")
+    rate: Optional[str] = Field(None, description="语速调整，如：+50%, -25%", pattern=r"^[+-]\d{1,3}%$")
+    volume: Optional[str] = Field(None, description="音量调整，如：+0%, -50%", pattern=r"^[+-]\d{1,3}%$")  
+    pitch: Optional[str] = Field(None, description="音调调整，如：+100Hz, -50Hz")
 
 
-class EchoRequest(BaseModel):
-    message: str = Field(..., min_length=1, max_length=1000)
-
-
-class EchoResponse(BaseModel):
+class TTSSynthesizeResponse(BaseModel):
     message: str
+    audio_size: int = Field(..., description="音频文件大小（字节）")
+    voice_used: str
+    parameters: dict
     timestamp: datetime = Field(default_factory=datetime.now)
 
 
-class Item(BaseModel):
-    id: int
-    name: str
-    description: Optional[str] = None
-    price: float = Field(..., gt=0)
-    tax: Optional[float] = None
+class TTSVoice(BaseModel):
+    name: str = Field(..., description="声音的完整名称")
+    short_name: str = Field(..., description="声音的简短名称")
+    gender: str = Field(..., description="性别：Male/Female")
+    locale: str = Field(..., description="语言地区代码，如：zh-CN")
+    language: str = Field(..., description="语言代码，如：zh")
+    display_name: str = Field(..., description="显示名称")
+    local_name: str = Field(..., description="本地语言名称")
 
 
-class ItemCreate(BaseModel):
-    name: str = Field(..., min_length=1, max_length=100)
-    description: Optional[str] = Field(None, max_length=500)
-    price: float = Field(..., gt=0)
-    tax: Optional[float] = Field(None, ge=0)
+class TTSVoicesResponse(BaseModel):
+    voices: List[TTSVoice]
+    total_count: int
+    timestamp: datetime = Field(default_factory=datetime.now)
 
 
-class ItemResponse(BaseModel):
-    id: int
-    name: str
-    description: Optional[str] = None
-    price: float
-    tax: Optional[float] = None
-    created_at: datetime = Field(default_factory=datetime.now)
+class TTSVoiceSearchRequest(BaseModel):
+    language: Optional[str] = Field(None, description="按语言筛选，如：zh, en")
+    locale: Optional[str] = Field(None, description="按地区筛选，如：zh-CN, en-US")
+    gender: Optional[str] = Field(None, description="按性别筛选：Male/Female")
+    limit: Optional[int] = Field(10, ge=1, le=100, description="返回结果数量限制")
 
 
-class User(BaseModel):
-    id: int
-    username: str
-    email: str
-    full_name: Optional[str] = None
-    is_active: bool = True
-
-
-class UserCreate(BaseModel):
-    username: str = Field(..., min_length=3, max_length=50)
-    email: str = Field(..., pattern=r"^[^@]+@[^@]+\.[^@]+$")
-    full_name: Optional[str] = Field(None, max_length=100)
-    password: str = Field(..., min_length=8)
-
-
-class UserResponse(BaseModel):
-    id: int
-    username: str
-    email: str
-    full_name: Optional[str] = None
-    is_active: bool
-    created_at: datetime = Field(default_factory=datetime.now)
-
-
-class ErrorResponse(BaseModel):
-    error: str
-    detail: Optional[str] = None
+class TTSVoiceSearchResponse(BaseModel):
+    voices: List[TTSVoice]
+    total_count: int
+    filtered_count: int
+    filters_applied: dict
     timestamp: datetime = Field(default_factory=datetime.now)

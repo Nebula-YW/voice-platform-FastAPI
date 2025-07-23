@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI(
-    title="FastAPI Vercel Template",
-    description="A ready-to-deploy FastAPI template for Vercel with common patterns and examples",
+    title="Edge TTS API",
+    description="Edge TTS (Text-to-Speech) API using Microsoft's Edge TTS service",
     version="1.0.0",
     openapi_url="/api/v1/openapi.json",
     docs_url="/api/v1/docs",
@@ -31,14 +31,14 @@ app.include_router(router, prefix="/api/v1")
 @app.get("/")
 def read_root():
     return {
-        "message": "Welcome to the FastAPI Vercel Template",
-        "description": "A ready-to-deploy FastAPI template with common patterns",
+        "message": "Welcome to Edge TTS API",
+        "description": "Edge TTS (Text-to-Speech) API using Microsoft's Edge TTS service",
         "docs": "/api/v1/docs",
         "version": "1.0.0",
         "endpoints": {
-            "/api/v1/health": "Health check endpoint",
-            "/api/v1/echo": "Echo endpoint for testing",
-            "/api/v1/items": "CRUD operations for items",
-            "/api/v1/users": "User management endpoints",
+            "/api/v1/tts/voices": "Get all available TTS voices",
+            "/api/v1/tts/voices/search": "Search TTS voices by filters",
+            "/api/v1/tts/synthesize": "Convert text to speech (returns metadata)",
+            "/api/v1/tts/synthesize/stream": "Convert text to speech (returns audio stream)",
         },
     }

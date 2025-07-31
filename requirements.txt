@@ -2,7 +2,7 @@
 #    uv pip compile pyproject.toml
 aiohappyeyeballs==2.6.1
     # via aiohttp
-aiohttp==3.12.14
+aiohttp==3.12.15
     # via edge-tts
 aiosignal==1.4.0
     # via aiohttp
@@ -28,6 +28,8 @@ idna==3.10
     # via
     #   anyio
     #   yarl
+lingua-language-detector==2.1.1
+    # via fastapi-vercel-template (pyproject.toml)
 multidict==6.6.3
     # via
     #   aiohttp

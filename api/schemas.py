@@ -5,10 +5,16 @@ from datetime import datetime
 
 # TTS相关模型
 class TTSSynthesizeRequest(BaseModel):
-    text: str = Field(..., min_length=1, max_length=5000, description="要转换为语音的文本")
+    text: str = Field(
+        ..., min_length=1, max_length=5000, description="要转换为语音的文本"
+    )
     voice: str = Field(..., description="声音名称，如：zh-CN-XiaoxiaoNeural")
-    rate: Optional[str] = Field(None, description="语速调整，如：+50%, -25%", pattern=r"^[+-]\d{1,3}%$")
-    volume: Optional[str] = Field(None, description="音量调整，如：+0%, -50%", pattern=r"^[+-]\d{1,3}%$")  
+    rate: Optional[str] = Field(
+        None, description="语速调整，如：+50%, -25%", pattern=r"^[+-]\d{1,3}%$"
+    )
+    volume: Optional[str] = Field(
+        None, description="音量调整，如：+0%, -50%", pattern=r"^[+-]\d{1,3}%$"
+    )
     pitch: Optional[str] = Field(None, description="音调调整，如：+100Hz, -50Hz")
 
 
@@ -48,4 +54,49 @@ class TTSVoiceSearchResponse(BaseModel):
     total_count: int
     filtered_count: int
     filters_applied: dict
+    timestamp: datetime = Field(default_factory=datetime.now)
+
+
+# 语言检测相关模型
+class LanguageDetectRequest(BaseModel):
+    text: str = Field(
+        ..., min_length=1, max_length=10000, description="要检测语言的文本"
+    )
+    with_confidence: bool = Field(False, description="是否返回置信度信息")
+
+
+class LanguageDetectBatchRequest(BaseModel):
+    texts: List[str] = Field(
+        ..., min_length=1, max_length=100, description="要批量检测语言的文本列表"
+    )
+    with_confidence: bool = Field(False, description="是否返回置信度信息")
+
+
+class LanguageResult(BaseModel):
+    text: str = Field(..., description="检测的文本")
+    language: str = Field(..., description="检测到的语言代码")
+    language_name: str = Field(..., description="语言名称")
+    confidence: Optional[float] = Field(None, description="置信度 (0.0-1.0)")
+
+
+class LanguageDetectResponse(BaseModel):
+    result: LanguageResult
+    timestamp: datetime = Field(default_factory=datetime.now)
+
+
+class LanguageDetectBatchResponse(BaseModel):
+    results: List[LanguageResult]
+    total_count: int
+    timestamp: datetime = Field(default_factory=datetime.now)
+
+
+class SupportedLanguage(BaseModel):
+    code: str = Field(..., description="语言代码")
+    name: str = Field(..., description="语言名称")
+    native_name: str = Field(..., description="语言本地名称")
+
+
+class SupportedLanguagesResponse(BaseModel):
+    languages: List[SupportedLanguage]
+    total_count: int
     timestamp: datetime = Field(default_factory=datetime.now)

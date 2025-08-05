@@ -113,17 +113,17 @@ wheels = [
 
 [[package]]
 name = "baml-py"
-version = "0.201.0"
+version = "0.203.1"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 wheels = [
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/54/54/2b0edb3d22e95ce56f36610391c11108a4ef26ba2837736a32001687ae34/baml_py-0.201.0-cp38-abi3-macosx_10_12_x86_64.whl", hash = "sha256:83228d2af2b0e845bbbb4e14f7cbd3376cec385aee01210ac522ab6076e07bec", size = 17387971, upload-time = "2025-07-03T19:29:05.844Z" },
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/c9/08/1d48c28c63eadea2c04360cbb7f64968599e99cd6b8fc0ec0bd4424d3cf1/baml_py-0.201.0-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:2a9d016139e3ae5b5ce98c7b05b5fbd53d5d38f04dc810ec4d70fb17dd6c10e4", size = 16191010, upload-time = "2025-07-03T19:29:09.323Z" },
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/73/1a/20b2d46501e3dd0648af339825106a6ac5eeb5d22d7e6a10cf16b9aa1cb8/baml_py-0.201.0-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b5058505b1a3c5f04fc1679aec4d730fa9bef2cbd96209b3ed50152f60b96baf", size = 19950249, upload-time = "2025-07-03T19:29:11.974Z" },
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/38/24/bc871059e905159ae1913c2e3032dd6ef2f5c3d0983999d2c2f1eebb65a4/baml_py-0.201.0-cp38-abi3-manylinux_2_24_aarch64.whl", hash = "sha256:36289d548581ba4accd5eaaab3246872542dd32dc6717e537654fa0cad884071", size = 19231310, upload-time = "2025-07-03T19:29:14.857Z" },
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/0e/11/4268a0b82b02c7202fe5aa0d7175712158d998c491cac723b2bac3d5d495/baml_py-0.201.0-cp38-abi3-musllinux_1_1_aarch64.whl", hash = "sha256:5ab70e7bd6481d71edca8a33313347b29faccec78b9960138aa437522813ac9a", size = 19490012, upload-time = "2025-07-03T19:29:18.512Z" },
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/31/21/c9f9aea1adba2a5978ffab11ba0948a9f3f81ec6ed3056067713260e93a1/baml_py-0.201.0-cp38-abi3-musllinux_1_1_x86_64.whl", hash = "sha256:7efc5c693a7142c230a4f3d6700415127fee0b9f5fdbb36db63e04e27ac4c0f1", size = 20090620, upload-time = "2025-07-03T19:29:21.072Z" },
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/99/cf/92123d8d753f1d1473e080c4c182139bfe3b9a6418e891cf1d96b6c33848/baml_py-0.201.0-cp38-abi3-win_amd64.whl", hash = "sha256:56499857b7a27ae61a661c8ce0dddd0fb567a45c0b826157e44048a14cf586f9", size = 17253005, upload-time = "2025-07-03T19:29:23.722Z" },
-    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/59/88/5056aa1bc9480f758cd6e210d63bd1f9ad90b44c87f4121285906526495e/baml_py-0.201.0-cp38-abi3-win_arm64.whl", hash = "sha256:1e52dc1151db84a302b746590fe2bc484bdd794f83fa5da7216d9394c559f33a", size = 15612701, upload-time = "2025-07-03T19:29:26.712Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/01/bc/370a1b73cc6e5eba89c1612149d4999b3f92cdaf454f01ae29475007de4f/baml_py-0.203.1-cp38-abi3-macosx_10_12_x86_64.whl", hash = "sha256:17866316df41f6e2d2d5ebbc145f16f6a09137eb7eb237bb83f33a7b2a4754a3", size = 18469749, upload-time = "2025-08-01T21:50:00.706Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/fd/85/92db135d84bdfa7b7d833d1d6b5924be444ccbe8091230dec22d94e40917/baml_py-0.203.1-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:2d211ed598bef7a82c2253edefd6b7b74fe39007158838cbdd8f5db799b3aad6", size = 17264387, upload-time = "2025-08-01T21:50:03.837Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/5b/92/cfd9a0abea4cc0bcbe0149d50e43ef9182ca26f5a46206488fc5aab97d9c/baml_py-0.203.1-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:08e7cea3e849d6ee9db5763ecb2351d280d83d7282edaef88cc40669599bbe63", size = 20986054, upload-time = "2025-08-01T21:50:06.178Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/96/d8/53687ea0b9fe6b2d0a6c2c726a4abd0d84e0fa5ea8c4905ca94ee7341f7a/baml_py-0.203.1-cp38-abi3-manylinux_2_24_aarch64.whl", hash = "sha256:6985373e5c1227d7f647ccae4d6883d9f7a7aa9c2aacc9e5c95793b837a863fa", size = 20299336, upload-time = "2025-08-01T21:50:08.343Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/cc/91/16df8ceb87a28f8dd64cc05d481431fc63c4b9db1c443880645b8048a90a/baml_py-0.203.1-cp38-abi3-musllinux_1_1_aarch64.whl", hash = "sha256:87219013efc04fc3fe164aba986273eacf2907c8c37fc01e2872d774c5e3e711", size = 20536434, upload-time = "2025-08-01T21:50:10.798Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/94/1d/2ca5e2d3fedd25bb9ebc255b9d56ac9f47cfc11ff28b4ad49ef04aaec743/baml_py-0.203.1-cp38-abi3-musllinux_1_1_x86_64.whl", hash = "sha256:5e7c8db6f68df41a110de6aa3e63f5f8964e2f0b6ba373eeb2e854412367063a", size = 21152994, upload-time = "2025-08-01T21:50:13.333Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/1f/b4/0c5d96727dd6ebe523355271ddf50bbd1913fe0928cad683a3721ffd1a49/baml_py-0.203.1-cp38-abi3-win_amd64.whl", hash = "sha256:79d44ca5e8ae1001d497d4efa9b50b1cc87f07dfdacbd72cd7359b5457c83a56", size = 18192128, upload-time = "2025-08-01T21:50:15.57Z" },
+    { url = "https://pypi.tuna.tsinghua.edu.cn/packages/4d/75/487693ffec5c9af019997ebe3d69b3d87bc3ca230a60e4c59384aa87e7d6/baml_py-0.203.1-cp38-abi3-win_arm64.whl", hash = "sha256:c38c5fc9035b13413332940110d08807a68f265d41fdf7ae211c7ab8da89dbf2", size = 16582571, upload-time = "2025-08-01T21:50:17.854Z" },
 ]
 
 [[package]]
@@ -172,45 +172,6 @@ dependencies = [
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/a2/b2/5a5dc4affdb6661dea100324e19a7721d5dc524b464fe8e366c093fd7d87/fastapi-0.115.8.tar.gz", hash = "sha256:0ce9111231720190473e222cdf0f07f7206ad7e53ea02beb1d2dc36e2f0741e9", size = 295403, upload-time = "2025-01-30T14:06:41.138Z" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/8f/7d/2d6ce181d7a5f51dedb8c06206cbf0ec026a99bf145edd309f9e17c3282f/fastapi-0.115.8-py3-none-any.whl", hash = "sha256:753a96dd7e036b34eeef8babdfcfe3f28ff79648f86551eb36bfc1b0bf4a8cbf", size = 94814, upload-time = "2025-01-30T14:06:38.564Z" },
-]
-
-[[package]]
-name = "fastapi-vercel-template"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "baml-py" },
-    { name = "edge-tts" },
-    { name = "fastapi" },
-    { name = "lingua-language-detector" },
-    { name = "pydantic" },
-    { name = "python-dotenv" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "httpx" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "baml-py", specifier = ">=0.201.0" },
-    { name = "edge-tts", specifier = ">=6.1.0" },
-    { name = "fastapi", specifier = "==0.115.8" },
-    { name = "lingua-language-detector", specifier = ">=2.0.0" },
-    { name = "pydantic", specifier = "==2.10.6" },
-    { name = "python-dotenv", specifier = "==1.0.1" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "httpx", specifier = ">=0.28.1" },
-    { name = "pytest", specifier = ">=8.3.5" },
-    { name = "pytest-asyncio", specifier = ">=0.23.0" },
-    { name = "ruff", specifier = ">=0.9.10" },
 ]
 
 [[package]]
@@ -654,6 +615,45 @@ source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/df/db/f35a00659bc03fec321ba8bce9420de607a1d37f8342eee1863174c69557/typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8", size = 85321, upload-time = "2024-06-07T18:52:15.995Z" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/26/9f/ad63fc0248c5379346306f8668cda6e2e2e9c95e01216d2b8ffd9ff037d0/typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d", size = 37438, upload-time = "2024-06-07T18:52:13.582Z" },
+]
+
+[[package]]
+name = "voice-platform-api"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "baml-py" },
+    { name = "edge-tts" },
+    { name = "fastapi" },
+    { name = "lingua-language-detector" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "httpx" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "baml-py", specifier = ">=0.203.1" },
+    { name = "edge-tts", specifier = ">=6.1.0" },
+    { name = "fastapi", specifier = "==0.115.8" },
+    { name = "lingua-language-detector", specifier = ">=2.1.1" },
+    { name = "pydantic", specifier = "==2.10.6" },
+    { name = "python-dotenv", specifier = "==1.0.1" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "pytest", specifier = ">=8.3.5" },
+    { name = "pytest-asyncio", specifier = ">=0.23.0" },
+    { name = "ruff", specifier = ">=0.9.10" },
 ]
 
 [[package]]

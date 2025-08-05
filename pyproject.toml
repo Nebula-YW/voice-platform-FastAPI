@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     #AI框架
-    "baml-py>=0.201.0",
+    "baml-py>=0.203.1",
     # API框架
     "fastapi==0.115.8",
     # 数据类型校验
@@ -20,7 +20,7 @@ dependencies = [
     # TTS服务
     "edge-tts>=6.1.0",
     # 语言检测
-    "lingua-language-detector>=2.0.0",
+    "lingua-language-detector>=2.1.1",
 ]
 
 [tool.setuptools]

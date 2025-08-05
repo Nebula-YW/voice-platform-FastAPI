@@ -27,12 +27,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-This is a FastAPI application optimized for Vercel deployment with serverless functions, featuring integrated Edge TTS (Text-to-Speech) capabilities.
+This is a comprehensive Voice Platform API built with FastAPI, optimized for Vercel deployment with serverless functions. The platform integrates multiple voice processing capabilities including Text-to-Speech (TTS) and intelligent language detection services.
 
 ### Project Structure
 - `api/main.py` - FastAPI app initialization, CORS middleware, and root endpoint
-- `api/routers.py` - All API route handlers (health, echo, items CRUD, users, TTS)
-- `api/schemas.py` - Pydantic models for request/response validation (including TTS models)
+- `api/routers.py` - All API route handlers (TTS synthesis, language detection)
+- `api/schemas.py` - Pydantic models for request/response validation (TTS and language detection models)
+- `api/language_service.py` - Language detection service using lingua-rs
 - `tests/` - Test suite using pytest and TestClient
 - `vercel.json` - Vercel serverless configuration
 - `pyproject.toml` - Project dependencies managed by UV
@@ -45,25 +46,30 @@ This is a FastAPI application optimized for Vercel deployment with serverless fu
 - All API routes prefixed with `/api/v1`
 
 **Router System (`api/routers.py`):**
-- Single router handling all endpoints
-- In-memory storage for demo (items_db, users_db)
-- Edge TTS integration with voice management and speech synthesis
-- Structured logging throughout
-- Global ID counters for items and users
+- Unified router handling voice processing endpoints
+- TTS synthesis with Edge TTS integration and voice management
+- Language detection with 15-language support via lingua-rs
+- Structured logging throughout all voice services
+- Comprehensive error handling and validation
 
 **Data Models (`api/schemas.py`):**
-- Pydantic models with validation
-- Separate Create/Response models for proper API design
-- TTS-specific models (TTSSynthesizeRequest, TTSVoice, etc.)
-- Timestamp fields auto-generated
+- Comprehensive Pydantic models with validation
+- Voice synthesis models (TTSSynthesizeRequest, TTSVoice, etc.)
+- Language detection models (LanguageDetectRequest, LanguageResult, etc.)
+- Unified response patterns with timestamp fields
 
 ### API Endpoints Structure
-- Root: `/` - API information
-- Health: `/api/v1/health`
-- Echo: `/api/v1/echo`
-- Items: `/api/v1/items` (full CRUD)
-- Users: `/api/v1/users` (create, read, list)
-- TTS: `/api/v1/tts/voices`, `/api/v1/tts/voices/search`, `/api/v1/tts/synthesize`, `/api/v1/tts/synthesize/stream`
+- Root: `/` - Voice Platform API information and service overview
+- **Voice Synthesis Services:**
+  - `/api/v1/tts/voices` - Get all available TTS voices
+  - `/api/v1/tts/voices/search` - Search voices by language, gender, locale
+  - `/api/v1/tts/synthesize` - Convert text to speech (metadata response)
+  - `/api/v1/tts/synthesize/stream` - Convert text to speech (audio stream)
+- **Language Detection Services:**
+  - `/api/v1/language/supported` - Get supported languages list
+  - `/api/v1/language/detect` - Detect single text language
+  - `/api/v1/language/detect/batch` - Batch language detection
+  - `/api/v1/language/detect/confidence` - Language detection with confidence
 
 ### Deployment Configuration
 - Vercel uses `requirements.txt` for deployment
@@ -72,15 +78,25 @@ This is a FastAPI application optimized for Vercel deployment with serverless fu
 - All routes handled by `/api/main` through rewrites
 
 ### Testing Strategy
-- Uses FastAPI TestClient for API testing
-- Comprehensive test coverage including validation, CRUD operations, and error cases
-- TTS endpoint testing with voice validation and parameter checking
-- Tests include pagination, duplicate handling, and complete workflows
+- Uses FastAPI TestClient for comprehensive API testing
+- Voice synthesis endpoint testing with voice validation and audio generation
+- Language detection testing with multi-language support validation
+- Error handling, parameter validation, and edge case coverage
+- Batch processing and confidence scoring test scenarios
 
-### TTS Integration Details
+### Voice Platform Integration Details
+
+**Text-to-Speech (TTS):**
 - **Edge TTS Library**: Uses `edge-tts>=6.1.0` for Microsoft's TTS service
 - **No API Keys**: Works out-of-the-box without authentication
 - **Voice Management**: Async voice discovery and filtering
-- **Audio Streaming**: Direct MP3 stream responses
+- **Audio Streaming**: Direct MP3 stream responses  
 - **Parameter Support**: Rate, volume, and pitch adjustments
 - **Error Handling**: Voice validation and comprehensive error responses
+
+**Language Detection:**
+- **Lingua-rs Integration**: Uses `lingua-language-detector>=2.0.0` for high-accuracy detection
+- **15 Language Support**: Optimized for Chinese, English, Spanish, Portuguese, Arabic, Russian, Thai, Vietnamese, Indonesian, Malay, Turkish, Italian, Polish, Japanese, Korean
+- **Confidence Scoring**: Optional confidence values for detection results
+- **Batch Processing**: Efficient multi-text language detection
+- **Fallback Handling**: Robust error handling with English defaults

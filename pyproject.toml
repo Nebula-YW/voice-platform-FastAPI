@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "fastapi-vercel-template"
+name = "voice-platform-api"
 version = "0.1.0"
-description = "A FastAPI template ready for deployment on Vercel"
+description = "A comprehensive voice processing platform with TTS and language detection services"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

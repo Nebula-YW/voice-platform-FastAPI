@@ -1,18 +1,25 @@
-# FastAPI Vercel Template with Edge TTS
+# Voice Platform API
 
-A production-ready FastAPI template optimized for deployment on Vercel with serverless functions, featuring integrated Edge TTS (Text-to-Speech) capabilities.
+A comprehensive voice processing platform built with FastAPI, optimized for Vercel deployment with serverless functions. The platform integrates Text-to-Speech (TTS) and intelligent language detection services for complete voice processing solutions.
 
 ## ✨ Features
 
+### Voice Processing Capabilities
+- **Text-to-Speech (TTS)** - Microsoft Edge's online text-to-speech service with 200+ voices
+- **Language Detection** - High-accuracy language detection supporting 15 languages using lingua-rs
+- **Voice Management** - Advanced voice search and filtering capabilities
+- **Batch Processing** - Efficient batch language detection for multiple texts
+- **Confidence Scoring** - Optional confidence values for language detection results
+
+### Technical Features
 - **FastAPI** - Modern, fast web framework for building APIs
-- **Edge TTS Integration** - Microsoft Edge's online text-to-speech service
 - **Vercel Ready** - Optimized for Vercel serverless deployment
 - **Auto Documentation** - Interactive API docs with Swagger UI
 - **CORS Support** - Cross-origin resource sharing configured
 - **Environment Variables** - Dotenv support for configuration
-- **Pydantic Models** - Data validation and serialization
+- **Pydantic Models** - Comprehensive data validation and serialization
 - **Structured Logging** - Built-in logging configuration
-- **Testing Setup** - Pytest configuration included
+- **Testing Setup** - Pytest configuration with comprehensive test coverage
 - **Type Hints** - Full type annotations throughout
 - **UV Package Manager** - Fast Python package manager with lock file support
 
@@ -23,7 +30,7 @@ A production-ready FastAPI template optimized for deployment on Vercel with serv
 1. **Clone and install dependencies:**
 ```bash
 git clone <your-repo>
-cd fastapi-vercel-template
+cd voice-platform-api
 uv sync
 ```
 
@@ -46,76 +53,46 @@ uv run uvicorn api.main:app --reload --port 3000
 ## 📁 Project Structure
 
 ```
-fastapi-vercel-template/
+voice-platform-api/
 ├── api/
 │   ├── __init__.py
-│   ├── main.py          # FastAPI app initialization
-│   ├── routers.py       # API route definitions
-│   └── schemas.py       # Pydantic models
+│   ├── main.py              # FastAPI app initialization
+│   ├── routers.py           # Voice processing API routes
+│   ├── schemas.py           # Pydantic models for TTS and language detection
+│   └── language_service.py  # Language detection service using lingua-rs
 ├── tests/
-│   ├── conftest.py      # Test configuration
-│   └── test_all.py      # Test cases
-├── .env.example         # Example environment variables
-├── .gitignore          # Git ignore file
-├── vercel.json          # Vercel configuration
-├── requirements.txt     # Python dependencies (for Vercel)
-├── pyproject.toml       # Project configuration with UV dependencies
-├── uv.lock             # UV lock file
+│   ├── conftest.py          # Test configuration
+│   └── test_all.py          # Comprehensive test cases
+├── .env.example             # Example environment variables
+├── .gitignore              # Git ignore file
+├── vercel.json              # Vercel configuration
+├── requirements.txt         # Python dependencies (for Vercel)
+├── pyproject.toml           # Project configuration with UV dependencies
+├── uv.lock                 # UV lock file
+├── CLAUDE.md               # Development guidelines
 └── README.md
 ```
 
 ## 🔗 API Endpoints
 
-### Core Endpoints
-- `GET /` - Root endpoint with API information
-- `GET /api/v1/health` - Health check endpoint
-- `POST /api/v1/echo` - Echo endpoint for testing
+### Core Endpoint
+- `GET /` - Voice Platform API information and service overview
 
-### Items API (CRUD Example)
-- `GET /api/v1/items` - List all items (with pagination)
-- `POST /api/v1/items` - Create a new item
-- `GET /api/v1/items/{item_id}` - Get item by ID
-- `PUT /api/v1/items/{item_id}` - Update item by ID
-- `DELETE /api/v1/items/{item_id}` - Delete item by ID
-
-### Users API
-- `GET /api/v1/users` - List all users (with pagination)
-- `POST /api/v1/users` - Create a new user
-- `GET /api/v1/users/{user_id}` - Get user by ID
-
-### TTS (Text-to-Speech) API
+### Voice Synthesis Services
 - `GET /api/v1/tts/voices` - Get all available TTS voices
 - `POST /api/v1/tts/voices/search` - Search voices by language, locale, or gender
 - `POST /api/v1/tts/synthesize` - Convert text to speech (returns metadata)
 - `POST /api/v1/tts/synthesize/stream` - Convert text to speech (returns audio stream)
 
+### Language Detection Services
+- `GET /api/v1/language/supported` - Get supported languages for detection
+- `POST /api/v1/language/detect` - Detect language of single text
+- `POST /api/v1/language/detect/batch` - Batch detect languages for multiple texts
+- `POST /api/v1/language/detect/confidence` - Detect language with confidence score
+
 ## 📊 Example Usage
 
-### Create an Item
-```bash
-curl -X POST "http://localhost:3000/api/v1/items" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Example Item",
-    "description": "This is an example item",
-    "price": 29.99,
-    "tax": 2.99
-  }'
-```
-
-### Echo Test
-```bash
-curl -X POST "http://localhost:3000/api/v1/echo" \
-  -H "Content-Type: application/json" \
-  -d '{"message": "Hello, FastAPI!"}'
-```
-
-### Health Check
-```bash
-curl "http://localhost:3000/api/v1/health"
-```
-
-### TTS Examples
+### Voice Synthesis Examples
 
 #### Get Available Voices
 ```bash
@@ -138,7 +115,7 @@ curl -X POST "http://localhost:3000/api/v1/tts/voices/search" \
 curl -X POST "http://localhost:3000/api/v1/tts/synthesize" \
   -H "Content-Type: application/json" \
   -d '{
-    "text": "你好，欢迎使用Edge TTS服务！",
+    "text": "你好，欢迎使用Voice Platform！",
     "voice": "zh-CN-XiaoxiaoNeural",
     "rate": "+20%",
     "volume": "+0%"
@@ -150,7 +127,7 @@ curl -X POST "http://localhost:3000/api/v1/tts/synthesize" \
 curl -X POST "http://localhost:3000/api/v1/tts/synthesize/stream" \
   -H "Content-Type: application/json" \
   -d '{
-    "text": "Hello, this is a test of the Edge TTS service!",
+    "text": "Hello, this is a test of the Voice Platform!",
     "voice": "en-US-AriaNeural",
     "rate": "+0%"
   }' \
@@ -169,6 +146,47 @@ curl -X POST "http://localhost:3000/api/v1/tts/synthesize/stream" \
     "pitch": "+100Hz"
   }' \
   --output chinese_speech.mp3
+```
+
+### Language Detection Examples
+
+#### Detect Single Text Language
+```bash
+curl -X POST "http://localhost:3000/api/v1/language/detect" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Hello world! This is a test.",
+    "with_confidence": true
+  }'
+```
+
+#### Batch Language Detection
+```bash
+curl -X POST "http://localhost:3000/api/v1/language/detect/batch" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "texts": [
+      "Hello world!",
+      "你好世界！",
+      "Hola mundo!",
+      "Bonjour le monde!"
+    ],
+    "with_confidence": true
+  }'
+```
+
+#### Get Supported Languages
+```bash
+curl "http://localhost:3000/api/v1/language/supported"
+```
+
+#### Language Detection with Confidence
+```bash
+curl -X POST "http://localhost:3000/api/v1/language/detect/confidence" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "这是一段中文文本，用于测试语言检测功能。"
+  }'
 ```
 
 ## 🧪 Testing
@@ -200,12 +218,14 @@ cp .env.example .env
 Edit the `.env` file with your configuration:
 ```env
 # Optional environment variables
-API_TITLE="FastAPI Vercel Template with Edge TTS"
+API_TITLE="Voice Platform API"
 API_VERSION="1.0.0"
 DEBUG=false
 
-# TTS configuration (Edge TTS doesn't require API keys)
-# All TTS functionality works out of the box without additional configuration
+# Voice Platform configuration
+# TTS: Edge TTS doesn't require API keys - works out of the box
+# Language Detection: lingua-rs works locally without API keys
+# All voice processing functionality works without additional configuration
 ```
 
 ### CORS Configuration
@@ -223,16 +243,23 @@ app.add_middleware(
 
 ## 🔧 Customization
 
-### TTS Integration Features
+### Voice Platform Integration Features
 
-The Edge TTS integration provides:
-
+**Text-to-Speech (TTS):**
 - **No API Key Required**: Uses Microsoft Edge's free online TTS service
 - **200+ Voices**: Support for multiple languages and dialects
 - **Voice Customization**: Adjust rate, volume, and pitch
 - **Streaming Audio**: Direct MP3 audio stream output
 - **Voice Search**: Filter voices by language, locale, and gender
 - **Async Support**: Full async/await support for high performance
+
+**Language Detection:**
+- **High Accuracy**: Uses lingua-rs for superior short text detection
+- **15 Language Support**: Chinese, English, Spanish, Portuguese, Arabic, Russian, Thai, Vietnamese, Indonesian, Malay, Turkish, Italian, Polish, Japanese, Korean
+- **Confidence Scoring**: Optional confidence values for detection results
+- **Batch Processing**: Efficient multi-text language detection
+- **No API Keys**: Works completely offline with no external dependencies
+- **Fast Performance**: Optimized for real-time processing
 
 #### Popular Voice Examples
 ```python
@@ -247,11 +274,20 @@ The Edge TTS integration provides:
 "en-GB-SoniaNeural"     # Female, British
 ```
 
-### Adding New Endpoints
+### Extending Voice Platform
 
+#### Adding New Voice Services
 1. **Define Pydantic models** in `api/schemas.py`
-2. **Add route handlers** in `api/routers.py`
-3. **Update tests** in `tests/test_all.py`
+2. **Add route handlers** in `api/routers.py` 
+3. **Update service logic** in appropriate service files
+4. **Update tests** in `tests/test_all.py`
+5. **Update documentation** in README.md and CLAUDE.md
+
+#### Integrating Additional TTS Providers
+1. Create new service modules (e.g., `api/google_tts_service.py`)
+2. Extend schemas with provider-specific models
+3. Add provider selection logic in routers
+4. Update configuration and documentation
 
 ### Database Integration
 
@@ -285,9 +321,12 @@ uv add --dev package-name
 
 - **Environment Variables**: Use Vercel's environment variable system
 - **CORS**: Configure appropriate origins for production
-- **Rate Limiting**: Consider adding rate limiting middleware
-- **Monitoring**: Add logging and monitoring solutions
-- **Database**: Use a production database instead of in-memory storage
+- **Rate Limiting**: Consider adding rate limiting middleware for voice services
+- **Monitoring**: Add logging and monitoring solutions for voice processing
+- **Caching**: Implement Redis caching for frequently requested TTS audio
+- **Storage**: Consider cloud storage for generated audio files
+- **Language Model Updates**: Monitor lingua-rs updates for improved language detection
+- **TTS Service Limits**: Monitor Edge TTS usage and implement fallback providers
 - **Dependencies**: Vercel uses `requirements.txt` for deployment, while development uses `uv.lock`
 
 ## 🛠️ UV Package Manager

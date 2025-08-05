@@ -132,7 +132,7 @@ def test_get_supported_languages():
     assert "total_count" in data
     assert "timestamp" in data
     assert isinstance(data["languages"], list)
-    assert data["total_count"] == 18  # We support 18 languages
+    assert data["total_count"] == 15  # We support 15 languages
 
     # Check language structure
     if data["languages"]:
@@ -230,7 +230,7 @@ def test_detect_language_batch():
 
     # Check expected languages
     results = data["results"]
-    expected_languages = ["en", "zh", "ja", "ko", "es", "fr"]
+    expected_languages = ["en", "zh", "ja", "ko", "es", "de"]
     detected_languages = [result["language"] for result in results]
 
     # Allow some flexibility as detection might vary
@@ -293,12 +293,10 @@ def test_detect_language_batch_too_many_texts():
     [
         ("This is English", "en"),
         ("Esto es español", "es"),
-        ("C'est français", "fr"),
         ("Das ist Deutsch", "de"),
         ("Это русский", "ru"),
         ("هذا عربي", "ar"),
         ("Questo è italiano", "it"),
-        ("Dit is Nederlands", "nl"),
         ("To jest polski", "pl"),
         ("Bu Türkçe", "tr"),
         ("นี่คือไทย", "th"),
@@ -324,7 +322,6 @@ def test_detect_various_languages(language_text, expected_code):
         "pt",
         "ar",
         "ru",
-        "fr",
         "de",
         "th",
         "vi",
@@ -332,8 +329,39 @@ def test_detect_various_languages(language_text, expected_code):
         "ms",
         "tr",
         "it",
-        "nl",
         "pl",
         "ja",
         "ko",
     ]
+
+
+def test_english_text_misdetection_cases():
+    """
+    Test cases for English texts that were previously misdetected as French or Dutch
+    Now that French and Dutch are removed, these texts should NOT be detected as French (fr) or Dutch (nl)
+    """
+    # Test case 1: "End Route" was previously detected as French
+    detect_data = {"text": "End Route", "with_confidence": True}
+    response = client.post("/api/v1/language/detect", json=detect_data)
+    assert response.status_code == 200
+    data = response.json()
+    result = data["result"]
+    # Verify it's not detected as French anymore (might be detected as German or English)
+    assert result["language"] != "fr"
+    assert result["language"] != "nl"
+    # Log what it was actually detected as for reference
+    print(f"'End Route' detected as: {result['language']} ({result['language_name']})")
+
+    # Test case 2: "I want to listen to Kings of Leon" was previously detected as Dutch
+    detect_data = {"text": "I want to listen to Kings of Leon", "with_confidence": True}
+    response = client.post("/api/v1/language/detect", json=detect_data)
+    assert response.status_code == 200
+    data = response.json()
+    result = data["result"]
+    # Verify it's not detected as Dutch anymore
+    assert result["language"] != "fr"
+    assert result["language"] != "nl"
+    # Log what it was actually detected as for reference
+    print(
+        f"'I want to listen to Kings of Leon' detected as: {result['language']} ({result['language_name']})"
+    )

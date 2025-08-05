@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class LanguageDetectionService:
-    """语言检测服务类，支持18种语言的高精度检测"""
+    """语言检测服务类，支持15种语言的高精度检测"""
 
     # 支持的语言映射 (lingua Language枚举 -> 语言信息)
     SUPPORTED_LANGUAGES = {
@@ -20,8 +20,8 @@ class LanguageDetectionService:
         },
         Language.ARABIC: {"code": "ar", "name": "Arabic", "native_name": "العربية"},
         Language.RUSSIAN: {"code": "ru", "name": "Russian", "native_name": "Русский"},
-        Language.FRENCH: {"code": "fr", "name": "French", "native_name": "Français"},
-        Language.GERMAN: {"code": "de", "name": "German", "native_name": "Deutsch"},
+        # Language.FRENCH: {"code": "fr", "name": "French", "native_name": "Français"},
+        # Language.GERMAN: {"code": "de", "name": "German", "native_name": "Deutsch"},
         Language.THAI: {"code": "th", "name": "Thai", "native_name": "ไทย"},
         Language.VIETNAMESE: {
             "code": "vi",
@@ -36,14 +36,14 @@ class LanguageDetectionService:
         Language.MALAY: {"code": "ms", "name": "Malay", "native_name": "Bahasa Melayu"},
         Language.TURKISH: {"code": "tr", "name": "Turkish", "native_name": "Türkçe"},
         Language.ITALIAN: {"code": "it", "name": "Italian", "native_name": "Italiano"},
-        Language.DUTCH: {"code": "nl", "name": "Dutch", "native_name": "Nederlands"},
+        # Language.DUTCH: {"code": "nl", "name": "Dutch", "native_name": "Nederlands"},
         Language.POLISH: {"code": "pl", "name": "Polish", "native_name": "Polski"},
         Language.JAPANESE: {"code": "ja", "name": "Japanese", "native_name": "日本語"},
         Language.KOREAN: {"code": "ko", "name": "Korean", "native_name": "한국어"},
     }
 
     def __init__(self):
-        """初始化语言检测器，仅加载支持的18种语言"""
+        """初始化语言检测器，仅加载支持的15种语言"""
         self._detector = None
         self._language_code_map = None
         self._initialize_detector()
@@ -51,7 +51,7 @@ class LanguageDetectionService:
     def _initialize_detector(self):
         """初始化lingua检测器，仅加载支持的语言以优化性能"""
         try:
-            logger.info("Initializing language detector with 18 supported languages")
+            logger.info("Initializing language detector with 15 supported languages")
 
             # 构建仅包含支持语言的检测器
             languages = list(self.SUPPORTED_LANGUAGES.keys())

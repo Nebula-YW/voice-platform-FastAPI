@@ -96,7 +96,7 @@ This is a comprehensive Voice Platform API built with FastAPI, optimized for Ver
 
 **Language Detection:**
 - **Lingua-rs Integration**: Uses `lingua-language-detector>=2.0.0` for high-accuracy detection
-- **15 Language Support**: Optimized for Chinese, English, Spanish, Portuguese, Arabic, Russian, Thai, Vietnamese, Indonesian, Malay, Turkish, Italian, Polish, Japanese, Korean
+- **20 Language Support**: Optimized for Chinese, English, Japanese, Korean, French, German, Spanish, Russian, Italian, Portuguese, Dutch, Polish, Arabic, Hindi, Thai, Vietnamese, Indonesian, Turkish, Swedish, Catalan
 - **Confidence Scoring**: Optional confidence values for detection results
 - **Batch Processing**: Efficient multi-text language detection
 - **Fallback Handling**: Robust error handling with English defaults

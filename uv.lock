@@ -175,45 +175,6 @@ wheels = [
 ]
 
 [[package]]
-name = "fastapi-vercel-template"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "baml-py" },
-    { name = "edge-tts" },
-    { name = "fastapi" },
-    { name = "lingua-language-detector" },
-    { name = "pydantic" },
-    { name = "python-dotenv" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "httpx" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "baml-py", specifier = ">=0.201.0" },
-    { name = "edge-tts", specifier = ">=6.1.0" },
-    { name = "fastapi", specifier = "==0.115.8" },
-    { name = "lingua-language-detector", specifier = ">=2.0.0" },
-    { name = "pydantic", specifier = "==2.10.6" },
-    { name = "python-dotenv", specifier = "==1.0.1" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "httpx", specifier = ">=0.28.1" },
-    { name = "pytest", specifier = ">=8.3.5" },
-    { name = "pytest-asyncio", specifier = ">=0.23.0" },
-    { name = "ruff", specifier = ">=0.9.10" },
-]
-
-[[package]]
 name = "frozenlist"
 version = "1.7.0"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
@@ -654,6 +615,45 @@ source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/df/db/f35a00659bc03fec321ba8bce9420de607a1d37f8342eee1863174c69557/typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8", size = 85321, upload-time = "2024-06-07T18:52:15.995Z" }
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/26/9f/ad63fc0248c5379346306f8668cda6e2e2e9c95e01216d2b8ffd9ff037d0/typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d", size = 37438, upload-time = "2024-06-07T18:52:13.582Z" },
+]
+
+[[package]]
+name = "voice-platform-api"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "baml-py" },
+    { name = "edge-tts" },
+    { name = "fastapi" },
+    { name = "lingua-language-detector" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "httpx" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "baml-py", specifier = ">=0.201.0" },
+    { name = "edge-tts", specifier = ">=6.1.0" },
+    { name = "fastapi", specifier = "==0.115.8" },
+    { name = "lingua-language-detector", specifier = ">=2.0.0" },
+    { name = "pydantic", specifier = "==2.10.6" },
+    { name = "python-dotenv", specifier = "==1.0.1" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "pytest", specifier = ">=8.3.5" },
+    { name = "pytest-asyncio", specifier = ">=0.23.0" },
+    { name = "ruff", specifier = ">=0.9.10" },
 ]
 
 [[package]]

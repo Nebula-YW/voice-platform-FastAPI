@@ -132,7 +132,7 @@ def test_get_supported_languages():
     assert "total_count" in data
     assert "timestamp" in data
     assert isinstance(data["languages"], list)
-    assert data["total_count"] == 21  # We support 21 languages
+    assert data["total_count"] == 20  # We support 20 languages
 
     # Check language structure
     if data["languages"]:
@@ -313,7 +313,7 @@ def test_detect_language_batch_too_many_texts():
         ("Això és català", "ca"),
         ("นี่คือไทย", "th"),
         ("Ini bahasa Indonesia", "id"),
-        ("Ini bahasa Melayu", "ms"),
+        # ("Ini bahasa Melayu", "ms"),  # Malay support disabled
         ("Đây là tiếng Việt", "vi"),
         ("Este é português", "pt"),
     ],
@@ -348,7 +348,7 @@ def test_detect_various_languages(language_text, expected_code):
         "tr",
         "sv",
         "ca",
-        "ms",
+        # "ms",  # Malay support disabled
     ]
 
 

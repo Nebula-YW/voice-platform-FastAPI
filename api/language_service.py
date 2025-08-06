@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class LanguageDetectionService:
-    """语言检测服务类，支持21种语言的高精度检测"""
+    """语言检测服务类，支持20种语言的高精度检测"""
 
     # 支持的语言映射 (lingua Language枚举 -> 语言信息)
     SUPPORTED_LANGUAGES = {
@@ -33,7 +33,7 @@ class LanguageDetectionService:
             "name": "Indonesian",
             "native_name": "Bahasa Indonesia",
         },
-        Language.MALAY: {"code": "ms", "name": "Malay", "native_name": "Bahasa Melayu"},
+        # Language.MALAY: {"code": "ms", "name": "Malay", "native_name": "Bahasa Melayu"},
         Language.TURKISH: {"code": "tr", "name": "Turkish", "native_name": "Türkçe"},
         Language.ITALIAN: {"code": "it", "name": "Italian", "native_name": "Italiano"},
         Language.DUTCH: {"code": "nl", "name": "Dutch", "native_name": "Nederlands"},
@@ -46,7 +46,7 @@ class LanguageDetectionService:
     }
 
     def __init__(self):
-        """初始化语言检测器，仅加载支持的21种语言"""
+        """初始化语言检测器，仅加载支持的20种语言"""
         self._detector = None
         self._language_code_map = None
         self._initialize_detector()
@@ -54,7 +54,7 @@ class LanguageDetectionService:
     def _initialize_detector(self):
         """初始化lingua检测器，仅加载支持的语言以优化性能"""
         try:
-            logger.info("Initializing language detector with 21 supported languages")
+            logger.info("Initializing language detector with 20 supported languages")
 
             # 构建仅包含支持语言的检测器
             languages = list(self.SUPPORTED_LANGUAGES.keys())

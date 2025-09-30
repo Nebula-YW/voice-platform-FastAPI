@@ -4,6 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
+### Git Commit Workflow
+**IMPORTANT**: When creating commits, pre-commit hooks (ruff-format) may modify files automatically. Always follow this workflow:
+1. Stage your changes: `git add <files>`
+2. Attempt commit: `git commit -m "message"`
+3. If pre-commit hook modifies files, stage the formatted changes: `git add <modified-files>`
+4. Amend the commit (only if you are the author and haven't pushed): `git commit --amend --no-edit`
+5. Never create a separate commit for formatting changes from pre-commit hooks
+
 ### Package Management (UV)
 - `uv sync` - Install dependencies from lock file
 - `uv add package-name` - Add new dependency
@@ -12,7 +20,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `uv pip compile pyproject.toml > requirements.txt` - Generate requirements.txt for production deployment (excludes dev dependencies)
 
 ### Running the Application
-- `uv run uvicorn api.main:app --reload --port 3000` - Start development server
+- `uv run uvicorn main:app --reload --port 3000` - Start development server
 - Access API at http://localhost:3000
 - Interactive docs at http://localhost:3000/api/v1/docs
 
@@ -30,7 +38,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a comprehensive Voice Platform API built with FastAPI, optimized for Vercel deployment with serverless functions. The platform integrates multiple voice processing capabilities including Text-to-Speech (TTS) and intelligent language detection services.
 
 ### Project Structure
-- `api/main.py` - FastAPI app initialization, CORS middleware, and root endpoint
+- `main.py` - FastAPI app initialization, CORS middleware, and root endpoint
 - `api/routers.py` - All API route handlers (TTS synthesis, language detection)
 - `api/schemas.py` - Pydantic models for request/response validation (TTS and language detection models)
 - `api/language_service.py` - Language detection service using lingua-rs
@@ -40,7 +48,7 @@ This is a comprehensive Voice Platform API built with FastAPI, optimized for Ver
 
 ### Key Components
 
-**FastAPI App (`api/main.py`):**
+**FastAPI App (`main.py`):**
 - Configured with custom OpenAPI docs URLs (`/api/v1/docs`, `/api/v1/redoc`)
 - CORS middleware configured for all origins (configure for production)
 - All API routes prefixed with `/api/v1`
@@ -75,7 +83,7 @@ This is a comprehensive Voice Platform API built with FastAPI, optimized for Ver
 - Vercel uses `requirements.txt` for deployment
 - Development uses `uv.lock` for dependency management
 - Function memory: 3009MB, max duration: 300s
-- All routes handled by `/api/main` through rewrites
+- All routes handled by `/main` through rewrites
 
 ### Testing Strategy
 - Uses FastAPI TestClient for comprehensive API testing

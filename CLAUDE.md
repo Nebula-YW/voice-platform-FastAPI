@@ -9,8 +9,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 1. Stage your changes: `git add <files>`
 2. Attempt commit: `git commit -m "message"`
 3. If pre-commit hook modifies files, stage the formatted changes: `git add <modified-files>`
-4. Amend the commit (only if you are the author and haven't pushed): `git commit --amend --no-edit`
+4. Create a new commit with the formatted changes: `git commit -m "message"`
 5. Never create a separate commit for formatting changes from pre-commit hooks
+
+**DO NOT USE**: `git commit --amend --no-edit` - This command is prohibited in this project
 
 ### Package Management (UV)
 - `uv sync` - Install dependencies from lock file

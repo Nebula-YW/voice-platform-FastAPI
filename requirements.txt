@@ -12,7 +12,7 @@ anyio==4.9.0
     # via starlette
 attrs==25.3.0
     # via aiohttp
-baml-py==0.206.1
+baml-py==0.209.0
     # via voice-platform-api (pyproject.toml)
 certifi==2025.7.14
     # via edge-tts

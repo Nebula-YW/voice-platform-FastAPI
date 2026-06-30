@@ -18,7 +18,7 @@ dependencies = [
     # 环境变量
     "python-dotenv==1.0.1",
     # TTS服务
-    "edge-tts>=6.1.0",
+    "edge-tts>=7.2.8",
     # 语言检测
     "lingua-language-detector>=2.0.0",
 ]

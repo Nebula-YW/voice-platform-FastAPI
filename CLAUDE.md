@@ -97,7 +97,7 @@ This is a comprehensive Voice Platform API built with FastAPI, optimized for Ver
 ### Voice Platform Integration Details
 
 **Text-to-Speech (TTS):**
-- **Edge TTS Library**: Uses `edge-tts>=6.1.0` for Microsoft's TTS service
+- **Edge TTS Library**: Uses `edge-tts>=7.2.8` for Microsoft's TTS service
 - **No API Keys**: Works out-of-the-box without authentication
 - **Voice Management**: Async voice discovery and filtering
 - **Audio Streaming**: Direct MP3 stream responses  

@@ -1,6 +1,7 @@
-from lingua import Language, LanguageDetectorBuilder
-from typing import List, Dict
 import logging
+from typing import ClassVar
+
+from lingua import Language, LanguageDetectorBuilder
 
 logger = logging.getLogger(__name__)
 
@@ -9,7 +10,7 @@ class LanguageDetectionService:
     """语言检测服务类，支持20种语言的高精度检测"""
 
     # 支持的语言映射 (lingua Language枚举 -> 语言信息)
-    SUPPORTED_LANGUAGES = {
+    SUPPORTED_LANGUAGES: ClassVar[dict] = {
         Language.CHINESE: {"code": "zh", "name": "Chinese", "native_name": "中文"},
         Language.ENGLISH: {"code": "en", "name": "English", "native_name": "English"},
         Language.SPANISH: {"code": "es", "name": "Spanish", "native_name": "Español"},
@@ -73,7 +74,7 @@ class LanguageDetectionService:
             logger.error(f"Failed to initialize language detector: {e}")
             raise
 
-    def detect_language(self, text: str, with_confidence: bool = False) -> Dict:
+    def detect_language(self, text: str, with_confidence: bool = False) -> dict:
         """
         检测单个文本的语言
 
@@ -132,8 +133,8 @@ class LanguageDetectionService:
             raise
 
     def detect_languages_batch(
-        self, texts: List[str], with_confidence: bool = False
-    ) -> List[Dict]:
+        self, texts: list[str], with_confidence: bool = False
+    ) -> list[dict]:
         """
         批量检测多个文本的语言
 
@@ -168,7 +169,7 @@ class LanguageDetectionService:
 
         return results
 
-    def get_supported_languages(self) -> List[Dict]:
+    def get_supported_languages(self) -> list[dict]:
         """
         获取支持的语言列表
 

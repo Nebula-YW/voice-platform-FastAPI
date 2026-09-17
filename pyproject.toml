@@ -9,25 +9,25 @@ description = "A comprehensive voice processing platform with TTS and language d
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    #AI框架
-    "baml-py>=0.209.0",
-    # API框架
-    "fastapi==0.115.8",
-    # 数据类型校验
-    "pydantic==2.10.6",
-    # 环境变量
-    "python-dotenv==1.0.1",
-    # TTS服务
+    "fastapi>=0.141.1",
+    "pydantic>=2.13.0",
+    "python-dotenv>=1.2.3",
     "edge-tts>=7.2.8",
-    # 语言检测
-    "lingua-language-detector>=2.0.0",
+    "lingua-language-detector>=2.2.0",
+    "mcp>=2.2.0",
+    "uvicorn>=0.53.0",
 ]
 
 [tool.setuptools]
 packages = ["api"]
 
+[tool.ruff.lint]
+# Existing HTTP wrappers catch Exception to return 500; keep that contract.
+ignore = ["BLE001"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+asyncio_mode = "auto"
 markers = [
     "asyncio: mark the test as an asyncio coroutine"
 ]
@@ -35,8 +35,8 @@ markers = [
 [dependency-groups]
 dev = [
     "httpx>=0.28.1",
-    "pytest>=8.3.5",
-    "pytest-asyncio>=0.23.0",
-    "ruff>=0.9.10",
-    "pre-commit>=4.0.0",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.16.8",
+    "pre-commit>=4.6.2",
 ]

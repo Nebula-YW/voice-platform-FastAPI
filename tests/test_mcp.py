@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 from mcp import Client
 
-from api.main import app
+from api.app import app
 from api.mcp_server import mcp
 
 

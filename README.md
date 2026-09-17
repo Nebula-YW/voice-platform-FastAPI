@@ -37,7 +37,7 @@ uv sync
 
 2. **Run the development server:**
 ```bash
-uv run uvicorn api.main:app --reload --port 3000
+uv run uvicorn main:app --reload --port 3000
 ```
 
 3. **Visit your API:**
@@ -59,7 +59,6 @@ voice-platform-api/
 ├── api/
 │   ├── __init__.py
 │   ├── app.py               # FastAPI app, CORS, REST routes, MCP mount
-│   ├── main.py              # Re-export app for tests
 │   ├── mcp_server.py        # MCP 2 tools (language, voices, synthesize)
 │   ├── routers.py           # Voice processing API routes
 │   ├── schemas.py           # Pydantic models for TTS and language detection
@@ -239,7 +238,7 @@ DEBUG=false
 
 ### CORS Configuration
 
-Update CORS settings in `api/main.py`:
+Update CORS settings in `api/app.py`:
 ```python
 app.add_middleware(
     CORSMiddleware,

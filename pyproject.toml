@@ -21,6 +21,9 @@ dependencies = [
 [tool.setuptools]
 packages = ["api"]
 
+[tool.vercel]
+entrypoint = "main:app"
+
 [tool.ruff.lint]
 # Existing HTTP wrappers catch Exception to return 500; keep that contract.
 ignore = ["BLE001"]

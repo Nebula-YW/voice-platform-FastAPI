@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field
-from typing import Optional, List
 from datetime import datetime
+
+from pydantic import BaseModel, Field
 
 
 # TTS相关模型
@@ -9,13 +9,13 @@ class TTSSynthesizeRequest(BaseModel):
         ..., min_length=1, max_length=5000, description="要转换为语音的文本"
     )
     voice: str = Field(..., description="声音名称，如：zh-CN-XiaoxiaoNeural")
-    rate: Optional[str] = Field(
+    rate: str | None = Field(
         None, description="语速调整，如：+50%, -25%", pattern=r"^[+-]\d{1,3}%$"
     )
-    volume: Optional[str] = Field(
+    volume: str | None = Field(
         None, description="音量调整，如：+0%, -50%", pattern=r"^[+-]\d{1,3}%$"
     )
-    pitch: Optional[str] = Field(None, description="音调调整，如：+100Hz, -50Hz")
+    pitch: str | None = Field(None, description="音调调整，如：+100Hz, -50Hz")
 
 
 class TTSSynthesizeResponse(BaseModel):
@@ -37,20 +37,20 @@ class TTSVoice(BaseModel):
 
 
 class TTSVoicesResponse(BaseModel):
-    voices: List[TTSVoice]
+    voices: list[TTSVoice]
     total_count: int
     timestamp: datetime = Field(default_factory=datetime.now)
 
 
 class TTSVoiceSearchRequest(BaseModel):
-    language: Optional[str] = Field(None, description="按语言筛选，如：zh, en")
-    locale: Optional[str] = Field(None, description="按地区筛选，如：zh-CN, en-US")
-    gender: Optional[str] = Field(None, description="按性别筛选：Male/Female")
-    limit: Optional[int] = Field(10, ge=1, le=100, description="返回结果数量限制")
+    language: str | None = Field(None, description="按语言筛选，如：zh, en")
+    locale: str | None = Field(None, description="按地区筛选，如：zh-CN, en-US")
+    gender: str | None = Field(None, description="按性别筛选：Male/Female")
+    limit: int | None = Field(10, ge=1, le=100, description="返回结果数量限制")
 
 
 class TTSVoiceSearchResponse(BaseModel):
-    voices: List[TTSVoice]
+    voices: list[TTSVoice]
     total_count: int
     filtered_count: int
     filters_applied: dict
@@ -66,7 +66,7 @@ class LanguageDetectRequest(BaseModel):
 
 
 class LanguageDetectBatchRequest(BaseModel):
-    texts: List[str] = Field(
+    texts: list[str] = Field(
         ..., min_length=1, max_length=100, description="要批量检测语言的文本列表"
     )
     with_confidence: bool = Field(False, description="是否返回置信度信息")
@@ -76,7 +76,7 @@ class LanguageResult(BaseModel):
     text: str = Field(..., description="检测的文本")
     language: str = Field(..., description="检测到的语言代码")
     language_name: str = Field(..., description="语言名称")
-    confidence: Optional[float] = Field(None, description="置信度 (0.0-1.0)")
+    confidence: float | None = Field(None, description="置信度 (0.0-1.0)")
 
 
 class LanguageDetectResponse(BaseModel):
@@ -85,7 +85,7 @@ class LanguageDetectResponse(BaseModel):
 
 
 class LanguageDetectBatchResponse(BaseModel):
-    results: List[LanguageResult]
+    results: list[LanguageResult]
     total_count: int
     timestamp: datetime = Field(default_factory=datetime.now)
 
@@ -97,6 +97,6 @@ class SupportedLanguage(BaseModel):
 
 
 class SupportedLanguagesResponse(BaseModel):
-    languages: List[SupportedLanguage]
+    languages: list[SupportedLanguage]
     total_count: int
     timestamp: datetime = Field(default_factory=datetime.now)

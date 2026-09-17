@@ -25,6 +25,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `uv run uvicorn main:app --reload --port 3000` - Start development server
 - Access API at http://localhost:3000
 - Interactive docs at http://localhost:3000/api/v1/docs
+- MCP Streamable HTTP at http://localhost:3000/mcp
 
 ### Testing
 - `uv run pytest tests/` - Run all tests
@@ -80,6 +81,8 @@ This is a comprehensive Voice Platform API built with FastAPI, optimized for Ver
   - `/api/v1/language/detect` - Detect single text language
   - `/api/v1/language/detect/batch` - Batch language detection
   - `/api/v1/language/detect/confidence` - Language detection with confidence
+- **MCP 2 Streamable HTTP:**
+  - `/mcp` - detect language, search voices, synthesize MP3
 
 ### Deployment Configuration
 - Vercel uses `requirements.txt` for deployment

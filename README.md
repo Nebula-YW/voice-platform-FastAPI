@@ -21,6 +21,7 @@ A comprehensive voice processing platform built with FastAPI, optimized for Verc
 - **Structured Logging** - Built-in logging configuration
 - **Testing Setup** - Pytest configuration with comprehensive test coverage
 - **Type Hints** - Full type annotations throughout
+- **MCP 2** - Official Model Context Protocol Python SDK 2 Streamable HTTP tools
 - **UV Package Manager** - Fast Python package manager with lock file support
 
 ## 🚀 Quick Start
@@ -43,6 +44,7 @@ uv run uvicorn api.main:app --reload --port 3000
 - API: http://localhost:3000
 - Interactive docs: http://localhost:3000/api/v1/docs
 - ReDoc: http://localhost:3000/api/v1/redoc
+- MCP (SDK 2 Streamable HTTP): http://localhost:3000/mcp
 
 ### Deploy to Vercel
 
@@ -56,13 +58,17 @@ uv run uvicorn api.main:app --reload --port 3000
 voice-platform-api/
 ├── api/
 │   ├── __init__.py
-│   ├── main.py              # FastAPI app initialization
+│   ├── app.py               # FastAPI app, CORS, REST routes, MCP mount
+│   ├── main.py              # Re-export app for tests
+│   ├── mcp_server.py        # MCP 2 tools (language, voices, synthesize)
 │   ├── routers.py           # Voice processing API routes
 │   ├── schemas.py           # Pydantic models for TTS and language detection
+│   ├── tts_service.py       # Edge TTS voice search and synthesis
 │   └── language_service.py  # Language detection service using lingua-rs
 ├── tests/
 │   ├── conftest.py          # Test configuration
-│   └── test_all.py          # Comprehensive test cases
+│   ├── test_all.py          # REST API test cases
+│   └── test_mcp.py          # MCP 2 in-process tool tests
 ├── .env.example             # Example environment variables
 ├── .gitignore              # Git ignore file
 ├── vercel.json              # Vercel configuration
@@ -89,6 +95,9 @@ voice-platform-api/
 - `POST /api/v1/language/detect` - Detect language of single text
 - `POST /api/v1/language/detect/batch` - Batch detect languages for multiple texts
 - `POST /api/v1/language/detect/confidence` - Detect language with confidence score
+
+### MCP 2
+- `POST /mcp` - Streamable HTTP MCP using the official Python SDK 2. Tools: `detect_language`, `search_tts_voices`, `synthesize_speech_audio`
 
 ## 📊 Example Usage
 

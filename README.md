@@ -1,6 +1,6 @@
 # Voice Platform API
 
-A comprehensive voice processing platform built with FastAPI, optimized for Vercel deployment with serverless functions. The platform integrates Text-to-Speech (TTS) and intelligent language detection services for complete voice processing solutions.
+A comprehensive voice processing platform built with FastAPI and MCP, optimized for Vercel deployment with serverless functions. The platform integrates Text-to-Speech (TTS) and intelligent language detection services for complete voice processing solutions.
 
 ## ✨ Features
 

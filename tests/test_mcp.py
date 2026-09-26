@@ -100,3 +100,30 @@ def test_mcp_http_initialize_and_detect_without_slash_redirect():
         assert detected.status_code == 200
         payload = _sse_json(detected)["result"]["structuredContent"]
         assert payload["language"] == "en"
+
+
+def test_mcp_http_modern_discover_2026_wire():
+    headers = {
+        "Accept": "application/json, text/event-stream",
+        "Content-Type": "application/json",
+    }
+    with TestClient(app) as client:
+        response = client.post(
+            "/mcp",
+            headers=headers,
+            json={
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "server/discover",
+                "params": {
+                    "_meta": {
+                        "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+                        "io.modelcontextprotocol/clientInfo": {"name": "wire-smoke", "version": "0"},
+                        "io.modelcontextprotocol/clientCapabilities": {},
+                    }
+                },
+            },
+        )
+        assert response.status_code == 200
+        discovered = _sse_json(response)
+        assert "2026-07-28" in discovered["result"]["supportedVersions"]

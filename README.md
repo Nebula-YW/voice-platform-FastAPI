@@ -305,13 +305,15 @@ To add database support:
 3. Create database models and connection logic
 4. Update the dependency injection in your routes
 
-### Authentication
+### MCP OAuth authentication
 
-To add authentication:
-1. Add `python-jose` and `passlib` to `pyproject.toml`
-2. Run `uv sync` to install dependencies
-3. Create authentication middleware
-4. Add protected routes with dependencies
+The hosted `/mcp` resource accepts standard bearer access tokens issued by
+HeyPicoo when `MCP_OAUTH_ISSUER` is configured. Set `MCP_OAUTH_RESOURCE` to the
+public resource URL and optionally override `MCP_OAUTH_JWKS_URI` and
+`MCP_OAUTH_SCOPES` (default: `mcp:read`). The server publishes protected
+resource metadata at `/.well-known/oauth-protected-resource/mcp` and never
+accepts Web Session cookies, Project IDs, Environment IDs, or static plugin
+tokens. Without `MCP_OAUTH_ISSUER`, local development remains anonymous.
 
 ### Adding New Dependencies
 

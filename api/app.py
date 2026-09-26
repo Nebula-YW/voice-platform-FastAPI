@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.types import ASGIApp, Receive, Scope, Send
 
 from .mcp_server import mcp, streamable_http_app
+from .mcp_auth import McpOAuthMiddleware, McpOAuthSettings
 from .routers import router
 
 
@@ -42,6 +43,7 @@ app = FastAPI(
 )
 
 app.add_middleware(_AcceptMcpWithoutSlash)
+app.add_middleware(McpOAuthMiddleware, settings=McpOAuthSettings.from_environment())
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

@@ -1234,6 +1234,7 @@ dependencies = [
     { name = "lingua-language-detector" },
     { name = "mcp" },
     { name = "pydantic" },
+    { name = "pyjwt", extra = ["crypto"] },
     { name = "python-dotenv" },
     { name = "uvicorn" },
 ]
@@ -1252,8 +1253,9 @@ requires-dist = [
     { name = "edge-tts", specifier = ">=7.2.8" },
     { name = "fastapi", specifier = ">=0.141.1" },
     { name = "lingua-language-detector", specifier = ">=2.2.0" },
-    { name = "mcp", specifier = ">=2.2.0" },
+    { name = "mcp", specifier = "==2.2.0" },
     { name = "pydantic", specifier = ">=2.13.0" },
+    { name = "pyjwt", extras = ["crypto"], specifier = ">=2.10.1" },
     { name = "python-dotenv", specifier = ">=1.2.3" },
     { name = "uvicorn", specifier = ">=0.53.0" },
 ]

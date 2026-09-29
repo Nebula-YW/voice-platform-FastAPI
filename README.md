@@ -96,7 +96,7 @@ voice-platform-api/
 - `POST /api/v1/language/detect/confidence` - Detect language with confidence score
 
 ### MCP 2
-- `POST /mcp` - Streamable HTTP MCP using the official Python SDK 2. Tools: `detect_language`, `search_tts_voices`, `synthesize_speech_audio`
+- `POST /mcp` - Stateless Streamable HTTP MCP using the official Python SDK 2. The endpoint uses one JSON response per request so it works reliably on Vercel's serverless runtime. Tools: `detect_language`, `search_tts_voices`, `synthesize_speech_audio`
 
 ## 📊 Example Usage
 

@@ -53,6 +53,10 @@ def transport_security_settings() -> TransportSecuritySettings:
 def streamable_http_app():
     return mcp.streamable_http_app(
         stateless_http=True,
+        # Vercel's serverless response path does not reliably flush the
+        # request-scoped SSE stream. JSON responses keep each stateless MCP
+        # request self-contained while remaining valid Streamable HTTP.
+        json_response=True,
         streamable_http_path="/",
         transport_security=transport_security_settings(),
     )

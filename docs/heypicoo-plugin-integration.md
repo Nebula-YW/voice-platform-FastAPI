@@ -9,7 +9,7 @@
 - Plugin Package 包含：`.codex-plugin/plugin.json`、`.mcp.json`、Skill
 - Runtime Binding 需要：无凭据公网 HTTPS MCP，endpoint 为 `https://voice-fastapi.nebula-tech.design/mcp`
 - Project 物化内容：原生 Agent Plugin（manifest、Skill、MCP 配置）；Agent 把合成的 MP3 写成当前 Project 普通文件
-- 身份与凭据边界：标准 MCP OAuth Resource Server；voice 只信任 HeyPicoo issuer，Package 不声明 `bearer_token_env_var`、不内嵌 secret。未配置 `MCP_OAUTH_ISSUER` 时仅作为本地开发回退，不能用于托管部署
+- 身份与凭据边界：标准 MCP OAuth Resource Server；voice 只信任 HeyPicoo issuer，Package 不声明 `bearer_token_env_var`、不内嵌 secret。未登录时可以完成连接并看到朗读、选音色和语言检测这些能力；真正执行这些能力时才要求登录。未配置 `MCP_OAUTH_ISSUER` 时仅作为本地开发回退，不能用于托管部署
 - voice 工具本身是无状态的通用语音处理能力，不读取主体私有数据；服务仍验证并注入 `principal_id`，供后续审计或受控扩展使用
 - 运行时与外部依赖：服务端依赖 Microsoft Edge TTS；语言检测在进程内完成
 - 开发与部署环境差异：本地 `http://127.0.0.1:3000/mcp`；HeyPicoo Preview / Production 使用已部署 HTTPS URL。Streamable HTTP 以 `stateless_http=True` 兼容无粘性会话的 serverless 与握手期客户端

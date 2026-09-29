@@ -308,7 +308,9 @@ To add database support:
 ### MCP OAuth authentication
 
 The hosted `/mcp` resource accepts standard bearer access tokens issued by
-HeyPicoo when `MCP_OAUTH_ISSUER` is configured. Set `MCP_OAUTH_RESOURCE` to the
+HeyPicoo when `MCP_OAUTH_ISSUER` is configured. Before login, a client may
+connect and see the voice capabilities. Detecting language, searching voices,
+and synthesizing audio still require a token. Set `MCP_OAUTH_RESOURCE` to the
 public resource URL and optionally override `MCP_OAUTH_JWKS_URI` and
 `MCP_OAUTH_SCOPES` (default: `mcp:read`). The server publishes protected
 resource metadata at `/.well-known/oauth-protected-resource/mcp` and never

@@ -50,6 +50,74 @@ class McpOAuthSettings:
         return cls(issuer=issuer, resource=resource, jwks_uri=jwks_uri, scopes=scopes)
 
 
+# These requests only let a client connect and see what Voice can do.
+# Generating audio, detecting language, and choosing a voice still require a token.
+_PUBLIC_MCP_METHODS = frozenset(
+    {
+        "initialize",
+        "notifications/initialized",
+        "ping",
+        "server/discover",
+        "tools/list",
+    }
+)
+_MAX_MCP_BODY_BYTES = 1_048_576
+
+
+class _BodyTooLarge(Exception):
+    pass
+
+
+async def _read_http_body(receive: Receive) -> bytes:
+    chunks: list[bytes] = []
+    total = 0
+    while True:
+        message = await receive()
+        if message["type"] == "http.disconnect":
+            break
+        if message["type"] != "http.request":
+            continue
+        chunk = message.get("body", b"")
+        total += len(chunk)
+        if total > _MAX_MCP_BODY_BYTES:
+            raise _BodyTooLarge
+        chunks.append(chunk)
+        if not message.get("more_body", False):
+            break
+    return b"".join(chunks)
+
+
+def _replay_http_body(body: bytes) -> Receive:
+    delivered = False
+
+    async def receive() -> dict[str, Any]:
+        nonlocal delivered
+        if delivered:
+            return {"type": "http.request", "body": b"", "more_body": False}
+        delivered = True
+        return {"type": "http.request", "body": body, "more_body": False}
+
+    return receive
+
+
+def _public_mcp_message(message: Any) -> bool:
+    return (
+        isinstance(message, dict)
+        and isinstance(message.get("method"), str)
+        and message["method"] in _PUBLIC_MCP_METHODS
+    )
+
+
+def _public_mcp_body(body: bytes) -> bool:
+    try:
+        payload = json.loads(body)
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    if isinstance(payload, list):
+        return len(payload) > 0 and all(_public_mcp_message(message) for message in payload)
+    return _public_mcp_message(payload)
+
+
 class _JwksCache:
     def __init__(self, uri: str) -> None:
         self.uri = uri
@@ -107,9 +175,22 @@ class McpOAuthMiddleware:
             }).encode()
             await self._send_response(send, 200, body, ((b"content-type", b"application/json"),))
             return
-        if path != "/mcp":
+        if path not in {"/mcp", "/mcp/"}:
             await self.app(scope, receive, send)
             return
+        if str(scope.get("method", "")).upper() == "OPTIONS":
+            await self.app(scope, receive, send)
+            return
+        if str(scope.get("method", "")).upper() == "POST":
+            try:
+                body = await _read_http_body(receive)
+            except _BodyTooLarge:
+                await self._send_response(send, 413, b'{"error":"too_large"}')
+                return
+            receive = _replay_http_body(body)
+            if _public_mcp_body(body):
+                await self.app(scope, receive, send)
+                return
         headers = {key.decode().lower(): value.decode() for key, value in scope.get("headers", [])}
         authorization = headers.get("authorization", "")
         match = re.fullmatch(r"Bearer\s+([^\s]+)", authorization, flags=re.IGNORECASE)

@@ -1,3 +1,6 @@
+import base64
+import hashlib
+import json
 import os
 from typing import Annotated, Literal
 
@@ -5,7 +8,7 @@ from mcp.server import MCPServer
 from mcp.server.mcpserver import Audio
 from mcp.server.mcpserver.exceptions import ToolError
 from mcp.server.transport_security import TransportSecuritySettings
-from mcp.types import ToolAnnotations
+from mcp.types import CallToolResult, TextContent, ToolAnnotations
 from pydantic import Field
 
 from .language_service import get_language_service
@@ -18,7 +21,8 @@ mcp = MCPServer(
     "Voice Platform",
     instructions=(
         "Detect the language of text, search Edge TTS voices, and synthesize MP3 audio. "
-        "After synthesize_speech_audio, save the returned audio as an .mp3 file in the current Project."
+        "The synthesize result includes an audio content block and a structured base64 "
+        "representation so the calling Agent can save it in the current Project."
     ),
 )
 
@@ -141,8 +145,13 @@ async def synthesize_speech_audio(
     pitch: Annotated[
         str | None, Field(description="Pitch adjustment such as +50Hz.")
     ] = None,
-) -> Audio:
-    """Convert text to MP3 speech. Save the audio result as an .mp3 file in the current Project."""
+) -> CallToolResult:
+    """Convert text to MP3 speech and return bytes in a directly writable form.
+
+    The audio content is kept for clients with native media handling.  The structured
+    representation is deliberately explicit because some MCP clients display audio
+    content without exposing its bytes to the Agent.
+    """
     try:
         result = await synthesize_speech(
             text=text,
@@ -155,4 +164,19 @@ async def synthesize_speech_audio(
         raise ToolError(str(error)) from error
     except RuntimeError as error:
         raise ToolError(str(error)) from error
-    return Audio(data=result.audio, format="mp3")
+    encoded = base64.b64encode(result.audio).decode("ascii")
+    structured_content = {
+        "audio_base64": encoded,
+        "mime_type": "audio/mpeg",
+        "format": "mp3",
+        "byte_length": len(result.audio),
+        "sha256": hashlib.sha256(result.audio).hexdigest(),
+        "voice": result.voice,
+    }
+    return CallToolResult(
+        content=[
+            Audio(data=result.audio, format="mpeg").to_audio_content(),
+            TextContent(type="text", text=json.dumps(structured_content)),
+        ],
+        structured_content=structured_content,
+    )

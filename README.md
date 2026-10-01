@@ -97,6 +97,7 @@ voice-platform-api/
 
 ### MCP 2
 - `POST /mcp` - Stateless Streamable HTTP MCP using the official Python SDK 2. The endpoint uses one JSON response per request so it works reliably on Vercel's serverless runtime. Tools: `detect_language`, `search_tts_voices`, `synthesize_speech_audio`
+- `synthesize_speech_audio` returns the native MP3 audio content and a `structuredContent` object containing `audio_base64`, `mime_type`, `byte_length`, and `sha256`, so an Agent can write and verify the file without a REST side channel.
 
 ## 📊 Example Usage
 

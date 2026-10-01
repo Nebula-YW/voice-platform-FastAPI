@@ -1,7 +1,10 @@
+from types import SimpleNamespace
+
 import pytest
 from fastapi.testclient import TestClient
 from mcp import Client
 
+from api import mcp_server
 from api.app import app
 from api.mcp_server import mcp
 
@@ -48,6 +51,30 @@ async def test_synthesize_unknown_voice_is_tool_error():
             {"text": "Hello", "voice": "invalid-voice-name"},
         )
         assert result.is_error is True
+
+
+@pytest.mark.asyncio
+async def test_synthesize_returns_writable_structured_audio(monkeypatch):
+    audio = b"ID3\x04\x00test-mp3"
+
+    async def fake_synthesize_speech(**_kwargs):
+        return SimpleNamespace(audio=audio, voice="zh-CN-XiaoxiaoNeural")
+
+    monkeypatch.setattr(mcp_server, "synthesize_speech", fake_synthesize_speech)
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "synthesize_speech_audio",
+            {"text": "你好", "voice": "zh-CN-XiaoxiaoNeural"},
+        )
+
+    assert result.is_error is False
+    payload = result.structured_content or {}
+    assert payload["audio_base64"] == "SUQzBAB0ZXN0LW1wMw=="
+    assert payload["mime_type"] == "audio/mpeg"
+    assert payload["format"] == "mp3"
+    assert payload["byte_length"] == len(audio)
+    assert payload["sha256"]
+    assert result.content[0].mime_type == "audio/mpeg"
 
 
 def test_mcp_http_initialize_and_detect_without_slash_redirect():
@@ -114,7 +141,10 @@ def test_mcp_http_modern_discover_2026_wire():
                 "params": {
                     "_meta": {
                         "io.modelcontextprotocol/protocolVersion": "2026-07-28",
-                        "io.modelcontextprotocol/clientInfo": {"name": "wire-smoke", "version": "0"},
+                        "io.modelcontextprotocol/clientInfo": {
+                            "name": "wire-smoke",
+                            "version": "0",
+                        },
                         "io.modelcontextprotocol/clientCapabilities": {},
                     }
                 },
